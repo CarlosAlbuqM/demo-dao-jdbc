@@ -1,6 +1,7 @@
 package dao.impl;
 
 import dao.DepartmentDao;
+import db.DB;
 import db.DbException;
 import entities.Department;
 
@@ -57,6 +58,22 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public void deleteById(Integer id) {
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement("DELETE FROM department WHERE id = ?");
+            st.setInt(1, id);
+            int rowsAffected = st.executeUpdate();
+            if( rowsAffected == 0) {
+                throw new DbException("Delete failed! ID not found!");
+            }
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
+
 
     }
 
