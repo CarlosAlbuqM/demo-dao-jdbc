@@ -2,7 +2,10 @@ package applicatiom;
 
 import dao.DaoFactory;
 import dao.SellerDao;
+import entities.Department;
 import entities.Seller;
+
+import java.util.List;
 
 
 public class Program {
@@ -12,5 +15,13 @@ public class Program {
         System.out.println("=== Test 1: Seller findById ===");
         Seller seller = sellerDao.findById(3);
         System.out.println(seller);
+
+        System.out.println("\n=== Test 2: Seller findByDepartment ===");
+        Department department = new Department(2, null);
+        List<Seller> list = sellerDao.findByDepartment(department);
+
+        for (Seller s : list) {
+            System.out.println(s);
+        }
     }
 }
