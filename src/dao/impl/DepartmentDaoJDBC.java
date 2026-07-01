@@ -53,7 +53,21 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public void update(Department obj) {
-
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement("UPDATE department "
+                    + "SET Name = ? "
+                    + "WHERE id = ?");
+            st.setString(1, obj.getName());
+            st.setInt(2, obj.getId());
+            st.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -79,7 +93,24 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public Department findById(Integer id) {
-        return null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement("SELECT * FROM department WHERE Id = ?");
+            st.setInt(1, id);
+            rs = st.executeQuery();
+            if(rs.next()) {
+                Department obj = new Department();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                return obj;
+            }
+            return null;
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+
     }
 
     @Override
